@@ -14,18 +14,18 @@
     <video id="video" width="640" height="365" >
       <source src="video/video.mp4" type="video/mp4">
       <source src="video/video.ogg" type="video/ogg">
-      <track id="captions"label="English" kind="subtitles" srclang="en" "video/captions.vtt" default>
+      <track id="captions" label="English" kind="subtitles" lang="en" src="video/captions.vtt" default>
     </video>
           
     
       <div id="video-controls">
-      <button type="button" id="play-pause"><img id="play-pause-icon" src="icons/play-icon.png" alt="play-pause button" onclick="change();" /></button>
-      <button type="button" id="mute"><img id="mute-icon" src="icons/volume-on-icon.png" alt="mute button"</button>
-      <button type="button" id="full-screen"><img class="full-icon" src="icons/fullscreen-icon.png"/></button>
+      <button type="button" id="play-pause"><img id="play-pause-icon" src="icons/play-icon.png" alt="play-pause button" /></button>
+      <button type="button" id="mute"><img id="mute-icon" src="icons/volume-on-icon.png" alt="mute button"/></button>
+      <button type="button" id="full-screen"><img class="full-icon" src="icons/fullscreen-icon.png" alt="full-screen button"/></button>
       
         
     </div>
-      <progress id="seek-bar" min="0" max="100" value="0">
+      <progress id="seek-bar" max="100" value="0">
       <span id="progress-bar"></span></progress>
       <span id="curtimetext"></span>
       <span id="durtimetext"></span>

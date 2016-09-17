@@ -4,15 +4,6 @@
 var video = document.getElementById("video");
 var image_tracker = 'play';
 
-/******************
- WebVTT
- ******************/
-
-var captionsContainer = document.getElementById("textCaptions");
-var captions = captionsContainer.getElementsByTagName("span");
-
-
-
 /**************
   Buttons var
 ***************/
@@ -24,40 +15,47 @@ var muteButton = document.getElementById("mute");
   Seekbar var
 ***************/
 var seekBar = document.getElementById("seek-bar");
-var progressBar = document.getElementById("progress-bar");
+/*var progressBar = document.getElementById("progress-bar");*/
 var curtimetext = document.getElementById("curtimetext");
 var durtimetext = document.getElementById("durtimetext");
+
+/******************
+ WebVTT
+ ******************/
+
+var captionsContainer = document.getElementById("textCaptions");
+var captions = captionsContainer.getElementsByTagName("span");
 
 /*******************
   play/pause button 
 ********************/
-//Note: did not use event listener. 
-
-function change(){
+//add event listener to trigger on click.
+playButton.addEventListener("click", function(){
+  //add a var to track what the image is
   var image = document.getElementById('play-pause-icon');
-  if(image_tracker=='play'){
+  //test if played
+  if(video.paused === true){
     video.play();
     image.src = "icons/pause-icon.png";
-      image_tracker = 'pause';
-    }else{
-      video.pause();
-      image.src = "icons/play-icon.png" ;  
-      image_tracker = 'play';
-    
-    }
-};
-
+    image_tracker = 'pause';
+  }else{
+    video.pause();
+    image.src = "icons/play-icon.png" ;  
+    image_tracker = 'play';
+  }
+  
+});
 
 /**************
   Mute Button
 ***************/
 
 //add event listener to trigger on click. 
-muteButton.addEventListener("click", function(){
-  //Add a var to get the image 
+muteButton.addEventListener("click" , function(){
+  //Add a var to track what the image is
   var vol_image = document.getElementById('mute-icon');
   //test if muted or not and update image 
-  if(video.muted == false){
+  if(video.muted === false){
     video.muted = true;
     vol_image.src = "icons/volume-off-icon.png";
       }else{
@@ -72,7 +70,7 @@ muteButton.addEventListener("click", function(){
 ******************/
 
 // Add event listener to trigger on click.
-fullScreenButton.addEventListener("click", function(){
+fullScreenButton.addEventListener('click',function(){
   if(video.requestFullscreen){
     video.requestFullscreen();
     } else if (video.mozRequestFullScreen){
@@ -81,6 +79,8 @@ fullScreenButton.addEventListener("click", function(){
       video.webkitRequestFullscreen(); //Chrom and Safari
     }
 });
+
+
 
 /*************
  Seekbar

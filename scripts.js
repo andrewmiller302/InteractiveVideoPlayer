@@ -10,6 +10,8 @@ var image_tracker = 'play';
 var playButton = document.getElementById("play-pause");
 var fullScreenButton = document.getElementById("full-screen");
 var muteButton = document.getElementById("mute");
+var subtitleButton = document.getElementById("subtitles");
+var subMode = 'hidden';
 
 /**************
   Seekbar var
@@ -18,6 +20,7 @@ var seekBar = document.getElementById("seek-bar");
 /*var progressBar = document.getElementById("progress-bar");*/
 var curtimetext = document.getElementById("curtimetext");
 var durtimetext = document.getElementById("durtimetext");
+
 
 /******************
  WebVTT
@@ -80,6 +83,42 @@ fullScreenButton.addEventListener('click',function(){
     }
 });
 
+/******************
+ subtitles
+******************/
+
+
+for (var i = 0; i < video.textTracks.length; i++){
+  video.textTracks[i].mode = 'hidden';
+}
+
+
+var hideSubtitles = function(){
+  for (var i = 0; i < video.textTracks.length; i++){
+  video.textTracks[i].mode = 'hidden';
+} };
+
+var showSubtitles = function(){
+  for (var i = 0; i < video.textTracks.length; i++){
+  video.textTracks[i].mode = 'showing';
+}
+  
+};
+
+
+
+subtitleButton.addEventListener('click', function(){
+  if(subMode === 'hidden'){
+    showSubtitles();
+    subMode = 'showing';
+    }else{
+    hideSubtitles();
+    subMode = 'hidden';
+    
+  }
+  
+});
+
 
 
 /*************
@@ -96,7 +135,7 @@ seekBar.addEventListener("change", function(){
 
 //update the seek bar as the video palys
 
-video.addEventListener("timeupdate", function(){
+var curTimeTrack = video.addEventListener("timeupdate", function(){
   //Caculate the slider value
   var value = (100 / video.duration) * video.currentTime;
   
@@ -130,8 +169,13 @@ video.addEventListener("timeupdate", function(){
   curtimetext.innerHTML = curmins+":"+cursecs+ " / ";
   durtimetext.innerHTML = durmins+":"+dursecs;
   
+
   
 });
+
+
+
+
 
 /*********************
  Seekbar Skip Ahead
@@ -146,22 +190,79 @@ seekBar.addEventListener('click', function(e){
 /*********************
   Caption 
 **********************/
-
-
-/*var convertTimeString = function (time){
+var convertTimeString = function (time){
   var result;
   var hours = parseInt(time.substr(0, 2));
   var minutes = parseInt(time.substr(3,2));
   var seconds = parseInt(time.substr(6,2));
   var milliseconds = parseInt(time.substr(9, 3));
   result = (hours * 3600) + (minutes * 60) + seconds + (milliseconds * 0.001);
+ 
+
   
-}
+};
+
+video.addEventListener("timeupdate", function(){
+  //Caculate the slider value
+  var value = (100 / video.duration) * video.currentTime;
+  
+  //Update the slider value
+  seekBar.value = value;
+  
+  //Track the time 
+  
+  /*takes the current time from the time update 
+  event listener rounds down and converts into min and sec*/
+  var curmins = Math.floor(video.currentTime / 60);
+  var cursecs = Math.floor(video.currentTime - curmins * 60);
+  var durmins = Math.floor(video.duration / 60);
+  var dursecs = Math.floor(video.duration - durmins * 60);
+  
+  //Formats time to add additional 0 if under 10 sec ie 00:07
+  if(cursecs <10){
+    cursecs = "0"+cursecs;
+  }
+  if(dursecs <10){
+    dursecs = "0"+dursecs;
+  }
+  if(curmins <10){
+    curmins = "0"+curmins;
+  }
+  if(durmins <10){
+    durmins = "0"+durmins;
+  }
+  
+  //Adds time to the html documents updates Span
+  var curTimeTrack = curtimetext.innerHTML = curmins+":"+cursecs;
+  var startTime = [];
+  var endTime;
+  
+  //console.log(curTimeTrack); 
+  
+  for(var i = 0; i < captions.length; i++){
+      startTime = convertTimeString(captions[i].dataset.timeStart);
+      endTime = convertTimeString(captions[i].dataset.timeEnd);
+  if(curTimeTrack >= startTime && curTimeTrack < endTime){
+    captions[i].style.color = "orange";
+    }else{
+        captions[i].style.color = "black";
+      }
+    
+  }   
+  
+for(var s = 0; s < startTime.length; s++)
+  console.log(startTime[s]);
+  
+});
 
 
 
-video.addEventListener('change', function(){
-  var timeViedo = this.curtimetext;
+
+
+
+
+/*video.addEventListener('change', function(){
+  var timeViedo = video.curtimetext;
   var startTime;
   var endTime;
   
